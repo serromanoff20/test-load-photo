@@ -34,3 +34,11 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+
+#git
+/.git
+
+#env-file
+.env
+
+/uploads
