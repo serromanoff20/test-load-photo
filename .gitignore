@@ -37,7 +37,8 @@ tests/_support/_generated
 
 #git
 /.git
-/.gitignore
 
 #env-file
-/.env
+.env
+
+/uploads
