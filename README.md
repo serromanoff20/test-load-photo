@@ -1,11 +1,3 @@
-<p align="center">
-    <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
-    </a>
-    <h1 align="center">Yii 2 Basic Project Template</h1>
-    <br>
-</p>
-
 Yii 2 Basic Project Template is a skeleton [Yii 2](https://www.yiiframework.com/) application best for
 rapidly creating small projects.
 
@@ -69,10 +61,12 @@ a directory named `basic` that is directly under the Web root.
 Set cookie validation key in `config/web.php` file to some random secret string:
 
 ```php
-'request' => [
-    // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-    'cookieValidationKey' => '<secret random string goes here>',
-],
+[
+   'request' => [
+       // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+       'cookieValidationKey' => '<secret random string goes here>',
+   ],
+];
 ```
 
 You can then access the application through the following URL:
@@ -231,3 +225,6 @@ vendor/bin/codecept run functional,unit --coverage --coverage-html --coverage-xm
 ```
 
 You can see code coverage output under the `tests/_output` directory.
+=======
+# test-load-photo
+Testing work for banki.shop. Used Yii2.
