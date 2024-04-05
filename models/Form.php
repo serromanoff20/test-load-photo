@@ -1,8 +1,8 @@
 <?php namespace app\models;
 
-//use Dotenv\Dotenv;
+use DateTime;
+use DateTimeZone;
 use yii\base\Model;
-use yii\web\UploadedFile;
 use yii\helpers\Inflector;
 
 class Form extends Model
@@ -12,38 +12,61 @@ class Form extends Model
     public function rules()
     {
         return [
-            [['photos'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 5],
-//            ['translatorAndLowRegistr']
+            [['photos'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 5, 'maxSize' => 4096*4096],
         ];
     }
 
-    public function translatorAndLowRegistr(/*array $attributes*/)
-    {
-//        $dotenv = Dotenv::createImmutable(__DIR__.'/../', '.env');
-//        $dotenv->load();
-
-//        $transliterated_word = [];
-//        foreach ($this->photos as $photo) {
-//            $transliterated_word[] = Inflector::slug($photo->name, '-', true);
-//        }
-
-//        return json_encode([$this->photos[0]->name => $transliterated_word[0]], JSON_FORCE_OBJECT);
-//        return json_encode($this->photos, JSON_FORCE_OBJECT);
-//        return json_encode(['DIRNAME'=>__DIR__."\..\config", 'getenv'=>$_ENV["DB_HOST"]], JSON_FORCE_OBJECT);
-    }
-
-    public function upload()
+    public function upload(): bool
     {
         if ($this->validate('')) {
+
             foreach ($this->photos as $photo) {
                 if (!file_exists('../uploads')) {
                     mkdir('../uploads');
                 }
                 $photo->saveAs('../uploads/' . $photo->name);
+
+                $timezone = new DateTimeZone("Europe/Samara");
+                try {
+                    $tmpDateTime = new DateTime("now", $timezone);
+                } catch (\Exception $e) {
+                    $this->addError('exception', $e->getMessage());
+
+                    return false;
+                }
+
+                $dataSetPhoto = [
+                    'name_photo' => $photo->name,
+                    'date' => $tmpDateTime->format('Y-m-d'),
+                    'time' => $tmpDateTime->format('H:i:s'),
+                ];
+
+                $modelPhoto = new Photos();
+                if ($modelPhoto->load($dataSetPhoto, '')) {
+                    $result[] = $modelPhoto->create();
+                    if ($modelPhoto->hasErrors()) {
+                        $this->addError('name_photo', $modelPhoto->getErrors());
+
+                        return false;
+                    }
+                }
             }
-            return true;
+            return isset($result) && gettype($result) === 'array';
         } else {
             return false;
         }
     }
+
+// ONLY FOR DEBUGGING
+//    public function check(): array
+//    {
+////        $model = new Photos();
+//        $result = [];
+//        foreach ($this->photos as $photo) {
+//            $result['проверка1'] = substr($photo->name, 0, -4);
+//            $result['проверка2'] = $photo->name;
+//
+//        }
+//        return $result;
+//    }
 }

@@ -38,4 +38,4 @@ tests/_support/_generated
 #env-file
 .env
 
-/uploads
+#/uploads/
