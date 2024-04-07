@@ -2,7 +2,7 @@
 
 /** @var yii\web\View $this */
 /** @var yii\bootstrap5\ActiveForm $form */
-/** @var app\models\ContactForm $model */
+/** @var app\models\Form $model */
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
@@ -10,6 +10,16 @@ use yii\captcha\Captcha;
 
 $this->title = 'to-load-photo';
 $this->params['breadcrumbs'][] = $this->title;
+
+
+if (isset($errors)) {
+    echo json_encode($errors, JSON_UNESCAPED_UNICODE);
+
+//} else if (isset($this->params['errors'])) {
+//    print_r($this->params['errors']);
+//} else if (isset($this->errors)) {
+//    print_r($this->errors);
+}
 ?>
 
 <div class="site-contact">

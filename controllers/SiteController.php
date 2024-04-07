@@ -3,14 +3,11 @@
 namespace app\controllers;
 
 use app\models\Form;
-//use stdClass;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 use yii\web\UploadedFile;
 
 class SiteController extends Controller
@@ -67,40 +64,6 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
-//    /**
-//     * Login action.
-//     *
-//     * @return Response|string
-//     */
-//    public function actionLogin()
-//    {
-//        if (!Yii::$app->user->isGuest) {
-//            return $this->goHome();
-//        }
-//
-//        $model = new LoginForm();
-//        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-//            return $this->goBack();
-//        }
-//
-//        $model->password = '';
-//        return $this->render('login', [
-//            'model' => $model,
-//        ]);
-//    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
     /**
      * Displays contact page.
      *
@@ -111,13 +74,13 @@ class SiteController extends Controller
         $model = new Form();
         if (Yii::$app->request->isPost) {
             $model->photos = UploadedFile::getInstances($model, 'photos');
-//            if ($model->upload()) {
-//                return $this->refresh('#success');
-//            }
-            return $model->translatorAndLowRegistr();
+            if ($model->upload() && !$model->hasErrors()) {
+                return $this->refresh('#success');
+            } else {
+
+                return $this->render('to-load-photo', ['model' => $model, 'errors' => $model->getErrors()]);
+            }
         }
-
-
         return $this->render('to-load-photo', ['model' => $model]);
     }
 }
