@@ -1,9 +1,11 @@
 <?php namespace app\models;
 
+use app\controllers\SiteController;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Connection;
+use yii\web\Controller;
 
 class Photos extends ActiveRecord
 {
@@ -45,10 +47,10 @@ class Photos extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['name_photo', 'date', 'time'], 'string'],
-            [['name_photo', 'date', 'time'], 'required', 'on' => self::SCENARIO_CREATE],
-            ['name_photo', 'unique'],
-            ['name_photo', 'validatorName'],
+            [['unique_name_photo', 'name_file', 'date', 'time'], 'string'],
+            [['unique_name_photo', 'name_file', 'date', 'time'], 'required', 'on' => self::SCENARIO_CREATE],
+            ['unique_name_photo', 'unique'],
+            ['unique_name_photo', 'validatorName'],
         ];
     }
 
@@ -56,7 +58,7 @@ class Photos extends ActiveRecord
     {
         $scenarios = parent::scenarios();
 
-        $scenarios[self::SCENARIO_CREATE] = ['name_photo', 'date', 'time'];
+        $scenarios[self::SCENARIO_CREATE] = ['unique_name_photo', 'name_file', 'date', 'time'];
 
         return $scenarios;
     }
@@ -72,26 +74,21 @@ class Photos extends ActiveRecord
         $this->$attribute = $this->uniqueName($tmp_attribute);
     }
 
-    private function uniqueName(string $name_photo): string
+    private function uniqueName(string $unique_name_photo): string
     {
-        $res_name_photo = $name_photo;
-        $notUnique = self::find()->where(['like', 'name_photo', $name_photo])->orderBy(['name_photo' => SORT_DESC])->one();
+        $res_name = $unique_name_photo;
+        $notUnique = self::find()->where(['like', 'unique_name_photo', $unique_name_photo])->orderBy(['unique_name_photo' => SORT_DESC])->one();
 
         if (!!$notUnique) {
-            if (str_contains($notUnique->name_photo, self::SEPARATOR)) {
-                $substrings = explode(self::SEPARATOR, $notUnique->name_photo);
+            if (str_contains($notUnique->unique_name_photo, self::SEPARATOR)) {
+                $substrings = explode(self::SEPARATOR, $notUnique->unique_name_photo);
                 $integer = (int)$substrings[1] + 1;
-                $res_name_photo = $substrings[0] . self::SEPARATOR . (string)$integer;
+                $res_name = $substrings[0] . self::SEPARATOR . (string)$integer;
             } else {
-                $res_name_photo = $name_photo . self::SEPARATOR . '1';
+                $res_name = $unique_name_photo . self::SEPARATOR . '1';
             }
         }
-        return $res_name_photo;
-    }
-
-    public function getRows(): array
-    {
-        return self::find()->all();
+        return $res_name;
     }
 
     public function create(): bool
@@ -104,5 +101,27 @@ class Photos extends ActiveRecord
             return false;
         }
         return true;
+    }
+
+    public function getPhotosBySortName(): array
+    {
+        return self::find()->orderBy(['unique_name_photo' => SORT_ASC])->asArray()->all();
+    }
+
+    public function getPhotosBySortDateTime(): array
+    {
+        return self::find()->asArray()->all();
+    }
+
+    public function getPhotosById(int $id): ActiveRecord
+    {
+        return self::find()->where(['id' => $id])->one();
+    }
+
+    public function getGroupedPhoto(): array
+    {
+        $photos = self::find()->select('name_file')->groupBy('name_file')->asArray()->all();
+
+        return $photos;
     }
 }

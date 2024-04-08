@@ -40,8 +40,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'options' => ['class' => 'navbar-nav'],
         'items' => [
             ['label' => 'Главная', 'url' => ['/site/index']],
-//            ['label' => 'About', 'url' => ['/site/about']],
+            ['label' => 'Фото(json)', 'url' => ['/site/get-photos']],
             ['label' => 'Загрузить фото', 'url' => ['/site/to-load-photo']],
+//            ['label' => 'Фото', 'url' => ['/site/view-photos']],
+
 //            Yii::$app->user->isGuest ? ['label' => 'Login', 'url' => ['/site/login']]
 //                : '<li class="nav-item">'
 //                    . Html::beginForm(['/site/logout'])
@@ -79,4 +81,30 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <?php $this->endBody() ?>
 </body>
 </html>
+<script>
+    if (document.location.hash === '#success') {
+        let p = document.createElement("div");
+        p.textContent = document.location.hash;
+        p.classList.add('alert-success');
+
+        try {
+            let row = document.getElementsByClassName("row")[0];
+            row.appendChild(p);
+        } catch (e) {
+            console.warn(e);
+        }
+    }
+    if (document.location.hash === '#error') {
+        let p = document.createElement("div");
+        p.textContent = document.location.hash;
+        p.classList.add('alert-error');
+
+        try {
+            let row = document.getElementsByClassName("row")[0];
+            row.appendChild(p);
+        } catch (e) {
+            console.warn(e);
+        }
+    }
+</script>
 <?php $this->endPage() ?>

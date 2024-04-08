@@ -21,10 +21,10 @@ class Form extends Model
         if ($this->validate('')) {
 
             foreach ($this->photos as $photo) {
-                if (!file_exists('../uploads')) {
-                    mkdir('../uploads');
+                if (!file_exists('../web/uploads')) {
+                    mkdir('../web/uploads');
                 }
-                $photo->saveAs('../uploads/' . $photo->name);
+                $photo->saveAs('../web/uploads/' . $photo->name);
 
                 $timezone = new DateTimeZone("Europe/Samara");
                 try {
@@ -36,7 +36,8 @@ class Form extends Model
                 }
 
                 $dataSetPhoto = [
-                    'name_photo' => $photo->name,
+                    'unique_name_photo' => $photo->name,
+                    'name_file' => $photo->name,
                     'date' => $tmpDateTime->format('Y-m-d'),
                     'time' => $tmpDateTime->format('H:i:s'),
                 ];
@@ -45,7 +46,7 @@ class Form extends Model
                 if ($modelPhoto->load($dataSetPhoto, '')) {
                     $result[] = $modelPhoto->create();
                     if ($modelPhoto->hasErrors()) {
-                        $this->addError('name_photo', $modelPhoto->getErrors());
+                        $this->addError('unique_name_photo', $modelPhoto->getErrors());
 
                         return false;
                     }

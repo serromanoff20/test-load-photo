@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Form;
+use app\models\Photos;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -61,12 +62,15 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new Photos();
+        if (Yii::$app->request->isGet) {
+
+            return $this->render('index', ['model' => $model, 'errors' => $model->getErrors()]);
+        }
+        return $this->refresh('#error');
     }
 
     /**
-     * Displays contact page.
-     *
      * @return Response|string
      */
     public function actionToLoadPhoto()
@@ -82,5 +86,45 @@ class SiteController extends Controller
             }
         }
         return $this->render('to-load-photo', ['model' => $model]);
+    }
+
+    /**
+     * @return Response|string
+     */
+    public function actionGetPhotos()
+    {
+        $model = new Photos();
+        if (Yii::$app->request->isGet) {
+            if (isset(Yii::$app->request->getQueryParams()['id'])) {
+                $id = (int)Yii::$app->request->getQueryParams()['id'];
+                $oActiveRecord = $model->getPhotosById($id);
+
+                $arrActiveRecord['id'] = $oActiveRecord->id;
+                $arrActiveRecord['unique_name_photo'] = $oActiveRecord->unique_name_photo;
+                $arrActiveRecord['name_file'] = $oActiveRecord->name_file;
+                $arrActiveRecord['date'] = $oActiveRecord->date;
+                $arrActiveRecord['time'] = $oActiveRecord->time;
+
+                return json_encode($arrActiveRecord);
+            }
+            return json_encode($model->getPhotosBySortDateTime(), JSON_UNESCAPED_UNICODE);
+        }
+        return $this->refresh('#error');
+    }
+
+    /**
+     * @return Response|string
+     */
+    public function actionViewPhotos()
+    {
+        $model = new Photos();
+        if (Yii::$app->request->isGet) {
+
+            return json_encode($model->getGroupedPhoto(), JSON_UNESCAPED_UNICODE);
+
+
+//            return json_encode($model->getPhotos(), JSON_UNESCAPED_UNICODE);
+        }
+        return $this->refresh('#error');
     }
 }
