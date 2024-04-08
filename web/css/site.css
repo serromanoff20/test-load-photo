@@ -18,14 +18,27 @@ main > .container {
     font-style: italic;
 }
 
+.row.bysort {
+    display: none;
+}
+
 .alert-success {
     display: block;
-    width: 50vw;
-    /*color: #4f4f4f;*/
+    width: 60vw;
     background-color: #37d78c;
     border-radius: 5px;
-    /*border-color: #198754;*/
-    /*font-style: italic;*/
+}
+
+.alert-error {
+    display: block;
+    width: 60vw;
+    background-color: #d73737;
+    border-radius: 5px;
+}
+
+.img-style {
+    width: 180px;
+    /*height: 100px;*/
 }
 
 /* add sorting icons to gridview sort links */

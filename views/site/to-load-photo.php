@@ -14,11 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 if (isset($errors)) {
     echo json_encode($errors, JSON_UNESCAPED_UNICODE);
-
-//} else if (isset($this->params['errors'])) {
-//    print_r($this->params['errors']);
-//} else if (isset($this->errors)) {
-//    print_r($this->errors);
 }
 ?>
 
@@ -38,18 +33,3 @@ if (isset($errors)) {
         </div>
     </div>
 </div>
-
-<script>
-    if (document.location.hash === '#success') {
-        let p = document.createElement("div");
-        p.textContent = document.location.hash;
-        p.classList.add('alert-success');
-
-        try {
-            let row = document.getElementsByClassName("row")[0];
-            row.appendChild(p);
-        } catch (e) {
-            console.warn(e);
-        }
-    }
-</script>

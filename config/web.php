@@ -51,9 +51,7 @@ $config = [
             'suffix' => '',
             'rules' => [
                 ['pattern' => '', 'route' => 'site/index'],
-                ['pattern' => 'site/<action:[\w\-]+>', 'route' => 'site/<action>'],
-//                ['pattern' => 'site/to-load-photo', 'route' => 'site/to-load-photo'],
-
+                ['pattern' => '<controller:\w+>/<action:[\w\-]+>', 'route' => '<controller>/<action>'],
             ],
         ],
     ],
